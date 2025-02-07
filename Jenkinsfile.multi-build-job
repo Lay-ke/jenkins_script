@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage ("Pull code") {
             steps {
-                git ''
+                sh "echo 'Pulling code from git'"
             }
+        }
     }
 }
