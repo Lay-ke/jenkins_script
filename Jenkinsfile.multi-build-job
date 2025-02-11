@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Pull Code') {
             steps {
-                git ''
+                git 'https://github.com/Lay-ke/hng_12-stage_01.git'
             }
         }
     
