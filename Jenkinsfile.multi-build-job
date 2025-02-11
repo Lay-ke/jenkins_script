@@ -17,6 +17,7 @@ pipeline {
             steps {
                 // Use Jenkins credentials stored in the Jenkins Credentials Manager
                 withCredentials([string(credentialsId: 'SONARQUBE_TOKEN', variable: 'SONARQUBE_TOKEN')]) {
+                    sh 'echo $SONARQUBE_TOKEN'
                     // Run SonarQube analysis using the SonarScanner
                     withSonarQubeEnv('sonarqube_server') {  // 'SonarQube' should match the SonarQube server configuration in Jenkins
                         sh ''' 
