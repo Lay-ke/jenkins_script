@@ -7,7 +7,7 @@ pipeline {
 
     tools {
         // Use the correct SonarScanner tool name from the configuration
-        sonarScanner 'sonar_scanner'  // Name should match the configured name in Jenkins
+        sonarRunner 'sonar_scanner'  // Name should match the configured name in Jenkins
     }
 
     stages {
@@ -27,10 +27,11 @@ pipeline {
                     withSonarQubeEnv('sonarqube_server') {  // 'SonarQube' should match the SonarQube server configuration in Jenkins
                         sh ''' 
                             sonar-scanner \
-                            -Dsonar.projectKey=my-project-key \
+                            -Dsonar.projectKey=my-python-project \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=$SONARQUBE_URL \
-                            -Dsonar.login=$SONARQUBE_TOKEN
+                            -Dsonar.login=$SONARQUBE_TOKEN \
+                            -Dsonar.language=py  # Ensure SonarQube knows it's analyzing Python code
                         '''
                     }
                 }
