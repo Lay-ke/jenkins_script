@@ -1,11 +1,59 @@
 pipeline {
     agent any
     
+    environment {
+        SONARQUBE_URL = 'http://localhost:9000'
+    }
+
+    tools {
+        // Install the SonarQube Scanner tool
+        sonarqube 'sonar_qube_scanner'
+    }
+
     stages {
-        stage ("Pull code") {
+        stage('Pull Code') {
             steps {
-                sh "echo 'Pulling code from git'"
+                git ''
             }
+        }
+    
+
+        stage ("SonarQube analysis") {
+            steps {
+                // Use Jenkins credentials stored in the Jenkins Credentials Manager
+                withCredentials([string(credentialsId: 'SONARQUBE_TOKEN', variable: 'SONARQUBE_TOKEN')]) {
+                    // Run SonarQube analysis using the SonarScanner
+                    withSonarQubeEnv('sonarqube_server') {  // 'SonarQube' should match the SonarQube server configuration in Jenkins
+                        sh ''' 
+                            sonar-scanner \
+                            -Dsonar.projectKey=my-project-key \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=$SONARQUBE_URL \
+                            -Dsonar.login=$SONARQUBE_TOKEN
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script {
+                    // Wait for SonarQube analysis results and quality gate status
+                    timeout(time: 1, unit: 'HOURS') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Quality Gate passed'
+        }
+        failure {
+            echo 'Quality Gate failed'
         }
     }
 }
