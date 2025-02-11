@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Pull Code') {
             steps {
-                git 'https://github.com/Lay-ke/hng_12-stage_01.git'
+                git branch: 'main', poll: false, url: 'https://github.com/Lay-ke/hng_12-stage_01.git'
             }
         }
     
