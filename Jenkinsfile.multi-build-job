@@ -5,6 +5,11 @@ pipeline {
         SONARQUBE_URL = 'http://localhost:9000'
     }
 
+    tools {
+        // Use the correct SonarScanner tool name from the configuration
+        sonarScanner 'sonar_scanner'  // Name should match the configured name in Jenkins
+    }
+
     stages {
         stage('Pull Code') {
             steps {
